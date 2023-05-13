@@ -166,7 +166,7 @@ public class GenerateMaze : MonoBehaviour
                             GameObject goal = Instantiate(Resources.Load(goal_name, typeof(GameObject))) as GameObject;
                             goal.transform.position = new Vector3(init_point.x + x * unit_scale.x, 2, init_point.z + z * unit_scale.z);
                             goal.transform.parent = goal_trigger.transform;
-                            //goal.SetActive(false);
+                            goal.SetActive(false);
                         }
                         break;
 
@@ -254,7 +254,7 @@ public class GenerateMaze : MonoBehaviour
                         GameObject goal = Instantiate(Resources.Load(goal_name, typeof(GameObject))) as GameObject;
                         goal.transform.position = new Vector3(init_point.x + x * unit_scale.x, 2, init_point.z + z * unit_scale.z);
                         goal.transform.parent = goal_trigger.transform;
-                        //goal.SetActive(false);
+                        goal.SetActive(false);
                         break;
 
                     default:

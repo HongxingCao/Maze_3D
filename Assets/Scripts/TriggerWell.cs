@@ -64,8 +64,8 @@ public class TriggerWell : MonoBehaviour
             }
             else if (gameObject.tag == "GoalWell" && gameObject.transform.childCount > 0)
             {
-                /*GameObject goal = gameObject.transform.GetChild(0).gameObject;
-                goal.SetActive(false);*/
+                GameObject goal = gameObject.transform.GetChild(0).gameObject;
+                goal.SetActive(false);
             }
             else if (gameObject.tag == "BoxWell" && gameObject.transform.childCount > 0)
             {

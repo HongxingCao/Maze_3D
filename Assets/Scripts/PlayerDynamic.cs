@@ -114,7 +114,7 @@ public class PlayerDynamic : MonoBehaviour
             FirstPersonMovement.HaltUpdateMovement = true;
 
             float wait = 0f;
-            if (isEvent == 2) wait = 2f;
+            if (isEvent == 2) wait = 1.5f;
             isEvent = 0;
 
             isRating = 1;
