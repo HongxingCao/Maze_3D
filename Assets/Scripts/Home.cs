@@ -4,11 +4,21 @@ using UnityEngine;
 using System.IO;
 //using System.Security.Cryptography;
 using System;
+using UnityEngine.InputSystem;
 
 public class Home : MonoBehaviour
 {
     public AudioClip HomeSound;
     public bool isPlayerHome;
+
+    private PlayerInputControls inputControls;
+
+    void Awake()
+    {
+        inputControls = new PlayerInputControls();
+        inputControls.PlayerAction.Enable();
+        //inputControls.PlayerAction.Putdown.performed += Putdown;
+    }
 
     void Start()
     {
@@ -17,9 +27,14 @@ public class Home : MonoBehaviour
 
     void Update()
     {
+        Putdown();
+    }
+
+    void Putdown()
+    {
         if (isPlayerHome && PlayerDynamic.carryGoal)
         {
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (inputControls.PlayerAction.Putdown.ReadValue<float>() > 0f)//if (Input.GetKeyDown(KeyCode.Q))
             {
                 PlayerDynamic.debugInfo = "keycode Q"; Debug.Log(PlayerDynamic.debugInfo);
 
@@ -35,10 +50,10 @@ public class Home : MonoBehaviour
                 goal.transform.parent = transform;
                 //float pos_x = (float)(Math.Pow((-1), ((int)PlayerDynamic.goalNum % 2)) * ((int)PlayerDynamic.goalNum / 2) * 1.1f);
                 goal.transform.localPosition = calLocalPos(PlayerDynamic.goalNum);//new Vector3(pos_x, 1, 1.1f); 
-                goal.transform.localScale = new Vector3(10/14f, 10/1f, 10/11f);
+                goal.transform.localScale = new Vector3(10 / 14f, 10 / 1f, 10 / 11f);
                 goal.transform.GetChild(0).gameObject.SetActive(true);
                 goal.layer = LayerMask.NameToLayer("Default");
-                
+
 
                 GenerateMaze.updateType = 2;
 
@@ -46,7 +61,7 @@ public class Home : MonoBehaviour
                 sw.WriteLine("{0}\t{1}\t{2}\tOffloadGoal\tgoalNum:{3}", Time.timeSinceLevelLoad, transform.position.x, transform.position.z, PlayerDynamic.goalNum);
                 sw.Close();
 
-            
+
             }
         }
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.InputSystem;
 
 public class PickUpGoal : MonoBehaviour
 {
@@ -9,19 +10,30 @@ public class PickUpGoal : MonoBehaviour
     //public static bool isCollected;
     public bool isChecked;
 
+    private PlayerInputControls inputControls;
+
     void Awake()
     {
         //isCollected = false;
         isChecked = false;
+
+        inputControls = new PlayerInputControls();
+        inputControls.PlayerAction.Enable();
+        //inputControls.PlayerAction.Pickup.performed += Pickup;
     }
 
     void Update()
+    {
+        Pickup();
+    }
+
+    public void Pickup()
     {
         if (isChecked)
         {
             GetComponent<MeshRenderer>().material.color = Color.yellow;
 
-            if (Input.GetKeyDown(KeyCode.E))
+            if (inputControls.PlayerAction.Pickup.ReadValue<float>() > 0f)//if (Input.GetKeyDown(KeyCode.E))
             {
                 PlayerDynamic.debugInfo = "keycode E"; Debug.Log(PlayerDynamic.debugInfo);
 
@@ -45,7 +57,7 @@ public class PickUpGoal : MonoBehaviour
                 sw.WriteLine("{0}\t{1}\t{2}\tPickUpGoal", Time.timeSinceLevelLoad, transform.position.x, transform.position.z);
                 sw.Close();
 
-            }            
+            }
         }
         else
         {

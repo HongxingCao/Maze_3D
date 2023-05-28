@@ -2,12 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.InputSystem;
 
 public class CollectBox : MonoBehaviour
 {
     public AudioClip positiveSound;
     public AudioClip negativeSound;
     public bool isChecked;
+
+    private PlayerInputControls inputControls;
+
+    void Awake()
+    {
+        inputControls = new PlayerInputControls();
+        inputControls.PlayerAction.Enable();
+        //inputControls.PlayerAction.Pickup.performed += Pickup;
+    }
 
     void Start()
     {
@@ -16,17 +26,23 @@ public class CollectBox : MonoBehaviour
 
     void Update()
     {
-        if(isChecked)
+        Pickup();
+    }
+    void Pickup()//InputAction.CallbackContext ctx
+    {
+
+        if (isChecked)
         {
             GetComponent<MeshRenderer>().material.color = Color.yellow;
-            if (Input.GetKeyDown(KeyCode.E))
+
+            if(inputControls.PlayerAction.Pickup.ReadValue<float>() > 0f)//if (Input.GetKeyDown(KeyCode.E))
             {
                 PlayerDynamic.debugInfo = "keycode E"; Debug.Log(PlayerDynamic.debugInfo);
 
                 int collectedBoxes = 0;
-                while(collectedBoxes == 0) { collectedBoxes = Random.Range(-10, 11) * 40; }                  
+                while (collectedBoxes == 0) { collectedBoxes = Random.Range(-10, 11) * 40; }
 
-                if(collectedBoxes > 0)
+                if (collectedBoxes > 0)
                 {
                     AudioSource.PlayClipAtPoint(positiveSound, transform.position);
                 }
@@ -34,7 +50,7 @@ public class CollectBox : MonoBehaviour
                 {
                     AudioSource.PlayClipAtPoint(negativeSound, transform.position);
                 }
-                
+
                 PlayerDynamic.Coins += collectedBoxes;
                 PlayerDynamic.collectedBoxes = collectedBoxes;
                 PlayerDynamic.isEvent = 2;

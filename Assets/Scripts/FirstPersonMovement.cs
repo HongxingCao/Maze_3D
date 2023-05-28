@@ -1,36 +1,42 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class FirstPersonMovement : MonoBehaviour
 {
-    public float speed = 5;
+    public float speed = 10;
 
     [Header("Running")]
     public bool canRun = true;
     public bool IsRunning { get; private set; }
-    public float runSpeed = 9;
-    public KeyCode runningKey = KeyCode.LeftShift;
+    public float runSpeed = 20;
 
-    Rigidbody rigidbody;
+    private Rigidbody body;
     /// <summary> Functions to override movement speed. Will use the last added override. </summary>
     public List<System.Func<float>> speedOverrides = new List<System.Func<float>>();
 
     public static bool HaltUpdateMovement = false;
 
-
+    private PlayerInputControls inputControls;
     void Awake()
     {
         // Get the rigidbody on this.
-        rigidbody = GetComponent<Rigidbody>();
+        body = GetComponent<Rigidbody>();
+
+        inputControls = new PlayerInputControls();
+        inputControls.PlayerAction.Enable();
     }
 
     void Update()//FixedUpdate
-    { 
+    {
+        //Move();
         if (HaltUpdateMovement)
-			return;
+            return;
 
         // Update IsRunning from input.
-        IsRunning = canRun && Input.GetKey(runningKey);
+        //IsRunning = canRun && Input.GetKey(KeyCode.LeftShift);
+        float shiftKey = inputControls.PlayerAction.Run.ReadValue<float>();
+        IsRunning = canRun && (shiftKey > 0f);
 
         // Get targetMovingSpeed.
         float targetMovingSpeed = IsRunning ? runSpeed : speed;
@@ -40,9 +46,13 @@ public class FirstPersonMovement : MonoBehaviour
         }
 
         // Get targetVelocity from input.
-        Vector2 targetVelocity =new Vector2( Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
+        //float moveX = Input.GetAxis("Horizontal");
+        //float moveY = Input.GetAxis("Vertical");
+        Vector2 move = inputControls.PlayerAction.Move.ReadValue<Vector2>();
+        Vector2 targetVelocity = new Vector2(move.x * targetMovingSpeed, move.y * targetMovingSpeed);
 
         // Apply movement.
-        rigidbody.velocity = transform.rotation * new Vector3(targetVelocity.x, rigidbody.velocity.y, targetVelocity.y);
+        body.velocity = transform.rotation * new Vector3(targetVelocity.x, body.velocity.y, targetVelocity.y);
     }
+
 }

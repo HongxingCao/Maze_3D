@@ -1,15 +1,24 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class FirstPersonLook : MonoBehaviour
 {
     [SerializeField]
     Transform character;
-    public float sensitivity = 1;
+    public float sensitivity_x = 0.6f;
+    public float sensitivity_y = 0.01f;
     public float smoothing = 1.5f;
 
     Vector2 velocity;
     Vector2 frameVelocity;
 
+    private PlayerInputControls inputControls;
+    void Awake()
+    {
+
+        inputControls = new PlayerInputControls();
+        inputControls.PlayerAction.Enable();
+    }
 
     void Reset()
     {
@@ -26,11 +35,13 @@ public class FirstPersonLook : MonoBehaviour
     void Update()
     {
         if (FirstPersonMovement.HaltUpdateMovement)
-            return; 
+            return;
 
         // Get smooth velocity.
-        Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-        Vector2 rawFrameVelocity = Vector2.Scale(mouseDelta, Vector2.one * sensitivity);
+        //float lookX = Input.GetAxisRaw("Mouse X");
+        //float lookY = Input.GetAxisRaw("Mouse Y");
+        Vector2 look = inputControls.PlayerAction.Look.ReadValue<Vector2>();
+        Vector2 rawFrameVelocity = Vector2.Scale(look, new Vector2(sensitivity_x, sensitivity_y));
         frameVelocity = Vector2.Lerp(frameVelocity, rawFrameVelocity, 1 / smoothing);
         velocity += frameVelocity;
         velocity.y = Mathf.Clamp(velocity.y, -90, 90);

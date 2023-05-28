@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.InputSystem;
 
 using UnityEngine.UIElements;
 //using TMPro;
@@ -32,6 +33,14 @@ public class PlayerDynamic : MonoBehaviour
 
     GUIStyle style = new GUIStyle();
 
+    private PlayerInputControls inputControls;
+    void Awake()
+    {
+
+        inputControls = new PlayerInputControls();
+        inputControls.PlayerAction.Enable();
+    }
+
     void Start()
     {
         InvokeRepeating("WritePlayerBehavior", 0f, 0.1f);
@@ -46,7 +55,7 @@ public class PlayerDynamic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (inputControls.PlayerAction.Quit.ReadValue<float>() > 0f)
         {
             Application.Quit();
         }
