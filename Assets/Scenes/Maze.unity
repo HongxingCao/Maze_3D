@@ -258,6 +258,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 3DPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 1140844521219951651, guid: b3115dd73ef2859469f0370680c4787e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1142971785277616235, guid: b3115dd73ef2859469f0370680c4787e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

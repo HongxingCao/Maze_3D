@@ -42,7 +42,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f8c14f2814b4b124a894a65c32c44987, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 5f25d29633edc554690d715c1bd09b93, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -170,7 +170,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 9ae68e07238108542879c949d4bb8544, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -484,13 +484,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8483815498552748663}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97fca36bd81de7c4cafce7bbf02ca611, type: 3}
+  m_Script: {fileID: 11500000, guid: fcb4777be5c57a442ba2d9634ae5a894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  canRun: 0
-  runSpeed: 9
-  runningKey: 304
+  speed: 10
+  canRun: 1
+  runSpeed: 20
 --- !u!114 &4395559151397754792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,7 +502,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c79ddd70b0cc28b458088552506a5fa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLag: 180
+  isDebug: 0
+  miniMap: {fileID: 8229277144378101416, guid: ae0b820d32fdd9a4ab63838c18adb3ab, type: 3}
 --- !u!114 &8384740263427597414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -702,11 +702,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8484629253963571011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec72980442fddac4d86e75ab24b4d027, type: 3}
+  m_Script: {fileID: 11500000, guid: aeb47ee7cc508ba43bb0660ffbbe1ad1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 8481455280716067295}
-  sensitivity: 2
+  character: {fileID: 0}
+  sensitivity_x: 0.6
+  sensitivity_y: 0.01
   smoothing: 1.5
 --- !u!1 &8484702002782528749
 GameObject:
