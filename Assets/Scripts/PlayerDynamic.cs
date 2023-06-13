@@ -21,24 +21,27 @@ public class PlayerDynamic : MonoBehaviour
     public static int isRating = 0; //0: no rating  1: rating 
     public static float ratingTime = 0f;
 
-    //for feedback
-    public static int collectedBoxes = 0;
-    public static bool isAccomplished = false;
-
     //for debug
-    public static bool getGoal = false; 
     public static bool carryGoal = false;
     public static int Coins = 0;
     public static string debugInfo = "";
 
     GUIStyle style = new GUIStyle();
 
-    private PlayerInputControls inputControls;
+    private InputControls inputControls;
     void Awake()
     {
+        inputControls = new InputControls();
+        inputControls.Player.Quit.performed += QuitUI;
+    }
 
-        inputControls = new PlayerInputControls();
-        inputControls.PlayerAction.Enable();
+    void OnEnable()
+    {
+        inputControls.Player.Enable();
+    }
+    void OnDisable()
+    {
+        inputControls.Player.Disable();
     }
 
     void Start()
@@ -52,14 +55,17 @@ public class PlayerDynamic : MonoBehaviour
         style.fontSize = 40;
     }
 
+    void QuitUI(InputAction.CallbackContext ctx)
+    {
+        FirstPersonMovement.HaltUpdateMovement = true;
+
+        GameObject QuitUI = Instantiate(Resources.Load("UIPrefab\\QuitGameUI", typeof(GameObject))) as GameObject;
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (inputControls.PlayerAction.Quit.ReadValue<float>() > 0f)
-        {
-            Application.Quit();
-        }
-
         LayerMask layerMask = LayerMask.GetMask("Pickable");
 
         RaycastHit hit;
@@ -94,8 +100,8 @@ public class PlayerDynamic : MonoBehaviour
         }
 
         miniMap.SetActive(isDebug);
-    }
 
+    }
 
     void WritePlayerBehavior()
     {
@@ -135,16 +141,8 @@ public class PlayerDynamic : MonoBehaviour
     {
         yield return new WaitForSeconds(wait);
 
-        GameObject moodRating = Instantiate(Resources.Load("2DMood", typeof(GameObject))) as GameObject;
+        GameObject moodRating = Instantiate(Resources.Load("UIPrefab\\2DMood", typeof(GameObject))) as GameObject;
         
-    }
-
-    IEnumerator ClearShow()
-    {
-        yield return new WaitForSeconds(1.5f);
-        collectedBoxes = 0;
-        getGoal = false;
-        isAccomplished = false;
     }
 
     void OnGUI()
@@ -170,41 +168,5 @@ public class PlayerDynamic : MonoBehaviour
                 GUILayout.TextArea("Carrying the drug bottle");
             }
         }
-
-
-        if (getGoal)
-        {
-            GUI.color = Color.green;
-            GUI.Box(new Rect(Screen.width / 2 - 500, Screen.height / 2 - 100, 1000, 100), "Congrats! You got the magic bottle.");
-
-            StartCoroutine(ClearShow());
-        }
-
-        if(collectedBoxes != 0)
-        {
-            if (collectedBoxes > 0)
-            {
-                GUI.color = Color.green;
-                GUI.Box(new Rect(Screen.width / 2 - 500, Screen.height / 2 - 100, 1000, 100),  "Reward: +" + collectedBoxes);
-            }
-            else if (collectedBoxes < 0)
-            {
-                GUI.color = Color.red;
-                GUI.Box(new Rect(Screen.width / 2 - 500, Screen.height / 2 - 100, 1000, 100),  "Punishment: " + collectedBoxes);
-            }
-            
-            StartCoroutine(ClearShow());
-        }
-
-        if (isAccomplished)
-        {
-            GUI.color = Color.green;
-            GUI.Box(new Rect(Screen.width / 2 - 500, Screen.height / 2 - 100, 1000, 100), "Congrats! You nourished the magic stone.");
-
-            StartCoroutine(ClearShow());
-        }
-
-
-
     }
 }

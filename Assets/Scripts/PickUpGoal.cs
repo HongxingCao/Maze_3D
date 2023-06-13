@@ -7,41 +7,52 @@ using UnityEngine.InputSystem;
 public class PickUpGoal : MonoBehaviour
 {
     public AudioClip PickUpSound;
+    public GameObject[] PickupEffects;
     //public static bool isCollected;
     public bool isChecked;
 
-    private PlayerInputControls inputControls;
+    private InputControls inputControls;
 
     void Awake()
     {
         //isCollected = false;
         isChecked = false;
 
-        inputControls = new PlayerInputControls();
-        inputControls.PlayerAction.Enable();
-        //inputControls.PlayerAction.Pickup.performed += Pickup;
+        inputControls = new InputControls();
+        inputControls.Player.Pickup.performed += Pickup;
     }
 
-    void Update()
+    void OnEnable()
     {
-        Pickup();
+        inputControls.Player.Enable();
+    }
+    void OnDisable()
+    {
+        inputControls.Player.Disable();
     }
 
-    public void Pickup()
+    public void Pickup(InputAction.CallbackContext ctx)
     {
-        if (isChecked)
+        if (isChecked && !PlayerDynamic.carryGoal)
         {
             GetComponent<MeshRenderer>().material.color = Color.yellow;
 
-            if (inputControls.PlayerAction.Pickup.ReadValue<float>() > 0f)//if (Input.GetKeyDown(KeyCode.E))
+            //if (Input.GetKeyDown(KeyCode.E))
             {
-                PlayerDynamic.debugInfo = "keycode E"; Debug.Log(PlayerDynamic.debugInfo);
+                PlayerDynamic.debugInfo = "Goal Pickup"; Debug.Log(PlayerDynamic.debugInfo);
 
                 int collectBoxes = Random.Range(-10, 10) * 40;
 
                 AudioSource.PlayClipAtPoint(PickUpSound, transform.position);
+                for (int i=0; i< PickupEffects.Length;i++)
+                {
+                    GameObject newParticleEffect = GameObject.Instantiate(PickupEffects[i], transform.position, PickupEffects[i].transform.rotation) as GameObject;
+                    Destroy(newParticleEffect, 5);
+                }
 
-                PlayerDynamic.getGoal = true; PlayerDynamic.carryGoal = true;
+                UIManager.GlobalAccess.UIInstantiate("VictoryUI", "", 0.5f, 2f);
+                
+                PlayerDynamic.carryGoal = true;
                 PlayerDynamic.isEvent = 2;
 
                 //Destroy(gameObject);

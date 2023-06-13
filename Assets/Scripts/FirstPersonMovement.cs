@@ -17,14 +17,14 @@ public class FirstPersonMovement : MonoBehaviour
 
     public static bool HaltUpdateMovement = false;
 
-    private PlayerInputControls inputControls;
+    private InputControls inputControls;
     void Awake()
     {
         // Get the rigidbody on this.
         body = GetComponent<Rigidbody>();
 
-        inputControls = new PlayerInputControls();
-        inputControls.PlayerAction.Enable();
+        inputControls = new InputControls();
+        inputControls.Player.Enable();
     }
 
     void Update()//FixedUpdate
@@ -35,8 +35,8 @@ public class FirstPersonMovement : MonoBehaviour
 
         // Update IsRunning from input.
         //IsRunning = canRun && Input.GetKey(KeyCode.LeftShift);
-        float shiftKey = inputControls.PlayerAction.Run.ReadValue<float>();
-        IsRunning = canRun && (shiftKey > 0f);
+        float shiftKey = inputControls.Player.Run.ReadValue<float>();
+        IsRunning = canRun && (shiftKey > 0.2f);
 
         // Get targetMovingSpeed.
         float targetMovingSpeed = IsRunning ? runSpeed : speed;
@@ -48,7 +48,7 @@ public class FirstPersonMovement : MonoBehaviour
         // Get targetVelocity from input.
         //float moveX = Input.GetAxis("Horizontal");
         //float moveY = Input.GetAxis("Vertical");
-        Vector2 move = inputControls.PlayerAction.Move.ReadValue<Vector2>();
+        Vector2 move = inputControls.Player.Move.ReadValue<Vector2>();
         Vector2 targetVelocity = new Vector2(move.x * targetMovingSpeed, move.y * targetMovingSpeed);
 
         // Apply movement.

@@ -8,16 +8,23 @@ using UnityEngine.InputSystem;
 
 public class Home : MonoBehaviour
 {
-    public AudioClip HomeSound;
+    public AudioClip CongratsSound;
     public bool isPlayerHome;
 
-    private PlayerInputControls inputControls;
+    private InputControls inputControls;
 
     void Awake()
     {
-        inputControls = new PlayerInputControls();
-        inputControls.PlayerAction.Enable();
-        //inputControls.PlayerAction.Putdown.performed += Putdown;
+        inputControls = new InputControls();
+        inputControls.Player.Putdown.performed += Putdown;
+    }
+    void OnEnable()
+    {
+        inputControls.Player.Enable();
+    }
+    void OnDisable()
+    {
+        inputControls.Player.Disable();
     }
 
     void Start()
@@ -25,25 +32,21 @@ public class Home : MonoBehaviour
         isPlayerHome = false;
     }
 
-    void Update()
-    {
-        Putdown();
-    }
-
-    void Putdown()
+    void Putdown(InputAction.CallbackContext ctx)
     {
         if (isPlayerHome && PlayerDynamic.carryGoal)
         {
-            if (inputControls.PlayerAction.Putdown.ReadValue<float>() > 0f)//if (Input.GetKeyDown(KeyCode.Q))
+            //if (Input.GetKeyDown(KeyCode.Q))
             {
-                PlayerDynamic.debugInfo = "keycode Q"; Debug.Log(PlayerDynamic.debugInfo);
+                PlayerDynamic.debugInfo = "Home Putdown"; Debug.Log(PlayerDynamic.debugInfo);
 
-                AudioSource.PlayClipAtPoint(HomeSound, transform.position);
+                AudioSource.PlayClipAtPoint(CongratsSound, transform.position);
+                UIManager.GlobalAccess.UIInstantiate("VictoryUI", "", 0f, 3f);
 
                 PlayerDynamic.goalNum++;
                 PlayerDynamic.carryGoal = false;
-                PlayerDynamic.isAccomplished = true;
                 PlayerDynamic.isEvent = 2;
+
 
                 GameObject player = GameObject.FindWithTag("Player");
                 GameObject goal = player.transform.Find("goal").gameObject;

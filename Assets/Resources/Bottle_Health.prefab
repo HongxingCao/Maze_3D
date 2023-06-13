@@ -4924,7 +4924,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e8cac7d97140ba4792d7063e5055417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PickUpSound: {fileID: 8300000, guid: 44420cc82247b8c41b2a11399c3dda75, type: 3}
+  PickUpSound: {fileID: 8300000, guid: cf21607877c50ef449a034483fbc4f13, type: 3}
+  PickupEffects:
+  - {fileID: 109592, guid: 125cbece63e40cf40a589e32859eda38, type: 3}
   isChecked: 0
 --- !u!1 &2549310866673316043
 GameObject:
@@ -9836,7 +9838,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2461700774696224882
 Transform:
   m_ObjectHideFlags: 0

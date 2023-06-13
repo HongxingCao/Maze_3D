@@ -11161,8 +11161,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77083c7a62d391f4496894d17f935ece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positiveSound: {fileID: 8300000, guid: 50dee191f1af3994c99e69c8c4e2c104, type: 3}
-  negativeSound: {fileID: 8300000, guid: a5548be9a9e5a6d43adb6e184f7b96bb, type: 3}
+  positiveSound: {fileID: 8300000, guid: 8108bd652b49c8b47b8caf51dbf46f77, type: 3}
+  positiveEffects:
+  - {fileID: 165102, guid: 4de72d65c2293424cbe6461a89fe2997, type: 3}
+  - {fileID: 118250, guid: a79f8048fa75d6c449d730e96bb836fa, type: 3}
+  negativeSound: {fileID: 8300000, guid: d66b362c266436340944321c6714c8ea, type: 3}
+  negativeEffects:
+  - {fileID: 180702, guid: a7c694f0877ea874fa57e033221095c3, type: 3}
   isChecked: 0
 --- !u!1 &527282336774386236
 GameObject:
