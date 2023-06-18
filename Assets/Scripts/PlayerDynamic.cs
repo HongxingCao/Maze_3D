@@ -9,159 +9,133 @@ using UnityEngine.UIElements;
 
 public class PlayerDynamic : MonoBehaviour
 {
+    public static PlayerDynamic Instance;
+
+    [Header("Debug")]
     public bool isDebug = false;
     public GameObject miniMap;
 
-    //for Goal & Box
-    public static int goalNum = 0;
-    public static int boxNum = 0;
+    [Header("Rating")]
+    public float ratingLag = 2 * 60f;
+    
+    public int LogCoins { get; set; } = 0;
+    public string LogInfo { get; set; } = "";
 
-    //for MoodRating
-    public static int isEvent = 0; //0: no event  1: rating imediately  2: rating 2s later
-    public static int isRating = 0; //0: no rating  1: rating 
-    public static float ratingTime = 0f;
+    public bool isEvent { set; get; } = false;
+    public bool isRating { set; get; } = false;
+    public int goalNum { set; get; } = 0;
+    public int boxNum { set; get; } = 0;
+    public int droppingsNum { set; get; } = 0;
+    public float ratingTime { set; get; } = 0f;
+    public bool carryGoal { get; set; } = false;
+    public GameObject checkedObj = null;
 
-    //for debug
-    public static bool carryGoal = false;
-    public static int Coins = 0;
-    public static string debugInfo = "";
+    public bool Halt { set; get; } = false;
 
-    GUIStyle style = new GUIStyle();
+    public InputControls inputControls;
 
-    private InputControls inputControls;
+    public void WriteBehavior(string BehaviorLine)
+    {
+        StreamWriter sw = new StreamWriter("movementFile" + SubjectMenu.subjectNumber + ".txt", true);
+        sw.WriteLine(BehaviorLine);
+        sw.Close();
+    }
+
     void Awake()
     {
+        Instance = this;
         inputControls = new InputControls();
-        inputControls.Player.Quit.performed += QuitUI;
-    }
-
-    void OnEnable()
-    {
         inputControls.Player.Enable();
-    }
-    void OnDisable()
-    {
-        inputControls.Player.Disable();
+        inputControls.Player.Quit.performed += QuitUI;
     }
 
     void Start()
     {
-        InvokeRepeating("WritePlayerBehavior", 0f, 0.1f);
-        InvokeRepeating("TimeRelevant", 5 * 60f, 5 * 60f);
-        InvokeRepeating("EventRelevant", 0f, 1f);
+        InvokeRepeating("WritePlayerPosition", 0f, 0.1f);
+        InvokeRepeating("MoodRating", 0f, 3f);
 
-        // Position the Text in the center of the Box
-        style.alignment = TextAnchor.MiddleCenter;
-        style.fontSize = 40;
-    }
-
-    void QuitUI(InputAction.CallbackContext ctx)
-    {
-        FirstPersonMovement.HaltUpdateMovement = true;
-
-        GameObject QuitUI = Instantiate(Resources.Load("UIPrefab\\QuitGameUI", typeof(GameObject))) as GameObject;
-        
+        UIManager.GlobalAccess.UIInstantiate("StartGameUI", "", 0.5f, -1f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        LayerMask layerMask = LayerMask.GetMask("Pickable");
+        miniMap.SetActive(isDebug);
 
+        LayerMask layerMask = LayerMask.GetMask("Pickable");
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, 50, layerMask))
         {
             Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.yellow);
-
-            GameObject obj = hit.collider.gameObject;
-            if (obj != null)
-            {
-                if (obj.tag == "Box") 
-                {
-                    obj.GetComponent<CollectBox>().isChecked = true;
-                }
-                if (obj.tag == "Goal")
-                {
-                    obj.GetComponent<PickUpGoal>().isChecked = true;
-                }
-            }
-
-            //Debug.Log("Did Hit");
+            checkedObj = hit.collider.gameObject;
         }
         else
         {
             Debug.DrawRay(transform.position, transform.forward * 200, Color.white);
+            checkedObj = null;
         }
 
-
-        if (isEvent != 0)
+        if(isEvent)
         {
-            FirstPersonMovement.HaltUpdateMovement = true;
-        }
-
-        miniMap.SetActive(isDebug);
-
-    }
-
-    void WritePlayerBehavior()
-    {
-        StreamWriter sw = new StreamWriter("movementFile" + SubjectMenu.subjectNumber + ".txt", true);
-        sw.WriteLine("{0}\t{1}\t{2}", Time.timeSinceLevelLoad, transform.position.x, transform.position.z);
-        sw.Close();
-    }
-
-    void TimeRelevant()
-    {
-        float fromLastTime = Time.timeSinceLevelLoad - ratingTime;
-
-        PlayerDynamic.debugInfo = "TimeRelevant"; Debug.Log(PlayerDynamic.debugInfo);
-        isEvent = 2;
-
-        StreamWriter sw = new StreamWriter("movementFile" + SubjectMenu.subjectNumber + ".txt", true);
-        sw.WriteLine("{0}\t{1}\t{2}\tTimeRelevant\tfromLastTime:{3}", Time.timeSinceLevelLoad, transform.position.x, transform.position.z, fromLastTime.ToString());
-        sw.Close();
-    }
-
-    void EventRelevant()
-    {
-        if (isEvent != 0 && isRating == 0)
-        {
-            FirstPersonMovement.HaltUpdateMovement = true;
-
-            float wait = 0f;
-            if (isEvent == 2) wait = 1.5f;
-            isEvent = 0;
-
-            isRating = 1;
-            StartCoroutine(MoodRating(wait));
+            StartCoroutine(ClearEvent(3f));
         }
     }
-
-    IEnumerator MoodRating(float wait)
+    IEnumerator ClearEvent(float wait)
     {
         yield return new WaitForSeconds(wait);
-
-        GameObject moodRating = Instantiate(Resources.Load("UIPrefab\\2DMood", typeof(GameObject))) as GameObject;
-        
+        isEvent = false;
     }
 
+    void QuitUI(InputAction.CallbackContext ctx)
+    {
+        PlayerDynamic.Instance.Halt = true;
+        UIManager.GlobalAccess.UIInstantiate("QuitGameUI", "", 0.5f, -1f);
+    }
+
+    void WritePlayerPosition()
+    {
+        WriteBehavior(string.Format("{0}\t{1}\t{2}", Time.timeSinceLevelLoad, transform.position.x, transform.position.z));
+    }
+
+    void MoodRating()
+    {
+        float fromLastTime = Time.timeSinceLevelLoad - ratingTime;
+        if(fromLastTime > ratingLag && ! isEvent && ! isRating)
+        {
+            PlayerDynamic.Instance.LogInfo = "MoodRating"; Debug.Log(PlayerDynamic.Instance.LogInfo);
+
+            isRating = true;
+            PlayerDynamic.Instance.Halt = true;
+            UIManager.GlobalAccess.UIInstantiate("2DMood", "", 0.5f, -1f);
+           
+
+            WriteBehavior(string.Format("{0}\t{1}\t{2}\tTimeRelevant\tfromLastTime:{3}", Time.timeSinceLevelLoad, transform.position.x, transform.position.z, fromLastTime.ToString()));
+        }
+    }
+
+    //private GUIStyle style = new GUIStyle();
     void OnGUI()
     {
+        // Position the Text in the center of the Box
+        //style.alignment = TextAnchor.MiddleCenter;
+        //style.fontSize = 40;
+
         GUI.skin.box.fontSize = 48;
         GUI.skin.label.fontSize = 36;
         GUI.skin.textArea.fontSize = 24;
 
-        if(isDebug)
+        if (isDebug)
         {
             GUI.color = Color.white;
             GUILayout.TextArea("     Debug Information     ", GUILayout.Width(300));
             GUILayout.TextArea(" Subject No: " + SubjectMenu.subjectNumber);
             GUILayout.TextArea(" Boxes: " + boxNum);
+            GUILayout.TextArea(" Droppings: " + droppingsNum);
             GUILayout.TextArea(" Goals: " + goalNum);
-            GUILayout.TextArea(" Coins: " + Coins);
+            GUILayout.TextArea(" Coins: " + LogCoins);
             GUILayout.TextArea(" Time: " + (int)(Time.timeSinceLevelLoad / 60f) + " min", GUILayout.Width(300));
             GUILayout.TextArea(" last time Rating: " + (int)(ratingTime / 60f) + " min");
-            GUILayout.TextArea(debugInfo);
+            GUILayout.TextArea(LogInfo);
 
             if (carryGoal)
             {
@@ -169,4 +143,5 @@ public class PlayerDynamic : MonoBehaviour
             }
         }
     }
+
 }

@@ -244,10 +244,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Submit
+  m_text: "\u786E\u8BA4"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
+  m_sharedMaterial: {fileID: 376554193332959201, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -416,10 +416,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: very happy
+  m_text: "\u975E\u5E38\u5F00\u5FC3"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
+  m_sharedMaterial: {fileID: 376554193332959201, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1062,10 +1062,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: very unhappy
+  m_text: "\u975E\u5E38\u4E0D\u5F00\u5FC3"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
+  m_sharedMaterial: {fileID: 376554193332959201, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1501,10 +1501,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: How have you been?
+  m_text: "\u8BF7\u51C6\u786E\u8BC4\u4EF7\u81EA\u5DF1\u5F53\u4E0B\u7684\u611F\u53D7"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
+  m_sharedMaterial: {fileID: 376554193332959201, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

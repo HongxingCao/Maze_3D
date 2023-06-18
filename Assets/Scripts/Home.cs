@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-//using System.Security.Cryptography;
 using System;
 using UnityEngine.InputSystem;
 
@@ -11,64 +10,15 @@ public class Home : MonoBehaviour
     public AudioClip CongratsSound;
     public bool isPlayerHome;
 
-    private InputControls inputControls;
-
     void Awake()
-    {
-        inputControls = new InputControls();
-        inputControls.Player.Putdown.performed += Putdown;
-    }
-    void OnEnable()
-    {
-        inputControls.Player.Enable();
-    }
-    void OnDisable()
-    {
-        inputControls.Player.Disable();
-    }
-
-    void Start()
     {
         isPlayerHome = false;
     }
 
-    void Putdown(InputAction.CallbackContext ctx)
+    void Start()
     {
-        if (isPlayerHome && PlayerDynamic.carryGoal)
-        {
-            //if (Input.GetKeyDown(KeyCode.Q))
-            {
-                PlayerDynamic.debugInfo = "Home Putdown"; Debug.Log(PlayerDynamic.debugInfo);
-
-                AudioSource.PlayClipAtPoint(CongratsSound, transform.position);
-                UIManager.GlobalAccess.UIInstantiate("VictoryUI", "", 0f, 3f);
-
-                PlayerDynamic.goalNum++;
-                PlayerDynamic.carryGoal = false;
-                PlayerDynamic.isEvent = 2;
-
-
-                GameObject player = GameObject.FindWithTag("Player");
-                GameObject goal = player.transform.Find("goal").gameObject;
-                goal.transform.parent = transform;
-                //float pos_x = (float)(Math.Pow((-1), ((int)PlayerDynamic.goalNum % 2)) * ((int)PlayerDynamic.goalNum / 2) * 1.1f);
-                goal.transform.localPosition = calLocalPos(PlayerDynamic.goalNum);//new Vector3(pos_x, 1, 1.1f); 
-                goal.transform.localScale = new Vector3(10 / 14f, 10 / 1f, 10 / 11f);
-                goal.transform.GetChild(0).gameObject.SetActive(true);
-                goal.layer = LayerMask.NameToLayer("Default");
-
-
-                GenerateMaze.updateType = 2;
-
-                StreamWriter sw = new StreamWriter("movementFile" + SubjectMenu.subjectNumber + ".txt", true);
-                sw.WriteLine("{0}\t{1}\t{2}\tOffloadGoal\tgoalNum:{3}", Time.timeSinceLevelLoad, transform.position.x, transform.position.z, PlayerDynamic.goalNum);
-                sw.Close();
-
-
-            }
-        }
+        PlayerDynamic.Instance.inputControls.Player.Putdown.performed += Putdown;
     }
-
 
     void OnTriggerEnter(Collider other)
     {
@@ -76,11 +26,8 @@ public class Home : MonoBehaviour
         {
             isPlayerHome = true;
 
-            StreamWriter sw = new StreamWriter("movementFile" + SubjectMenu.subjectNumber + ".txt", true);
-            sw.WriteLine("{0}\t{1}\t{2}\tComeBackHome", Time.timeSinceLevelLoad, transform.position.x, transform.position.z);
-            sw.Close();
-
-            PlayerDynamic.debugInfo = "Come back home!"; Debug.Log(PlayerDynamic.debugInfo);
+            PlayerDynamic.Instance.LogInfo = "Come back home!"; Debug.Log(PlayerDynamic.Instance.LogInfo);
+            PlayerDynamic.Instance.WriteBehavior(string.Format("{0}\t{1}\t{2}\tComeBackHome", Time.timeSinceLevelLoad, transform.position.x, transform.position.z));
         }
     }
 
@@ -90,14 +37,38 @@ public class Home : MonoBehaviour
         {
             isPlayerHome = false;
 
-            StreamWriter sw = new StreamWriter("movementFile" + SubjectMenu.subjectNumber + ".txt", true);
-            sw.WriteLine("{0}\t{1}\t{2}\tLeaveHome", Time.timeSinceLevelLoad, transform.position.x, transform.position.z);
-            sw.Close();
-
-            PlayerDynamic.debugInfo = "Leave home!"; Debug.Log(PlayerDynamic.debugInfo);
+            PlayerDynamic.Instance.LogInfo = "Leave home!"; Debug.Log(PlayerDynamic.Instance.LogInfo);
+            PlayerDynamic.Instance.WriteBehavior(string.Format("{0}\t{1}\t{2}\tLeaveHome", Time.timeSinceLevelLoad, transform.position.x, transform.position.z));
         }
     }
 
+    void Putdown(InputAction.CallbackContext ctx)
+    {
+        if (isPlayerHome && PlayerDynamic.Instance.carryGoal)
+        {
+
+            PlayerDynamic.Instance.LogInfo = "Home Putdown"; Debug.Log(PlayerDynamic.Instance.LogInfo);
+
+            AudioSource.PlayClipAtPoint(CongratsSound, transform.position);
+            UIManager.GlobalAccess.UIInstantiate("VictoryUI", "", 0f, 3f);
+
+            PlayerDynamic.Instance.goalNum++;
+            PlayerDynamic.Instance.carryGoal = false;
+            PlayerDynamic.Instance.isEvent = true;
+
+
+            GameObject player = GameObject.FindWithTag("Player");
+            GameObject goal = player.transform.Find("goal").gameObject;
+            goal.transform.parent = transform;
+            //float pos_x = (float)(Math.Pow((-1), ((int)PlayerDynamic.Instance.goalNum % 2)) * ((int)PlayerDynamic.Instance.goalNum / 2) * 1.1f);
+            goal.transform.localPosition = calLocalPos(PlayerDynamic.Instance.goalNum);//new Vector3(pos_x, 1, 1.1f); 
+            goal.transform.localScale = new Vector3(10 / 14f, 10 / 1f, 10 / 11f);
+            goal.transform.GetChild(0).gameObject.SetActive(true);
+
+            GenerateMaze.updateType = 2;
+            PlayerDynamic.Instance.WriteBehavior(string.Format("{0}\t{1}\t{2}\tOffloadGoal\tgoalNum:{3}", Time.timeSinceLevelLoad, transform.position.x, transform.position.z, PlayerDynamic.Instance.goalNum));
+        }
+    }
 
     private Vector3 calLocalPos(int n)
     {

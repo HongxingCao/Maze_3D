@@ -276,10 +276,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Get $100
+  m_text: "\u83B7\u5F97\u82E5\u5E72\u91D1\u94B1"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
+  m_sharedMaterial: {fileID: 376554193332959201, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

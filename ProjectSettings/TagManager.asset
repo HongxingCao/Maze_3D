@@ -18,6 +18,8 @@ TagManager:
   - World
   - Junction
   - MiniMap
+  - DroppingsWell
+  - Droppings
   layers:
   - Default
   - TransparentFX

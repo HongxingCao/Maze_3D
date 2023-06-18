@@ -4,6 +4,9 @@ using UnityEngine;
 using System.IO;
 using System.Security.Cryptography;
 using System;
+//using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class GenerateMaze : MonoBehaviour
 {
@@ -15,6 +18,7 @@ public class GenerateMaze : MonoBehaviour
     GameObject cornerWell;
     GameObject goalWell;
     GameObject boxWell;
+    GameObject droppingsWell;
     GameObject trees;
 
 
@@ -22,6 +26,10 @@ public class GenerateMaze : MonoBehaviour
     int z_size = 23;
     int[,] predefMaze;
     int[,] mazeMatrix;
+    int minbox = 5;
+    int maxbox = 20;
+    int mindroppings = 5;
+    int maxdroppings = 20;
 
 
     Vector3 unit_scale = new Vector3(40, 30, 40);
@@ -29,23 +37,24 @@ public class GenerateMaze : MonoBehaviour
 
     const int roadType = 0;
     const int wallType = 1;
-    const int entryType = 2;//record data, Update Maze
+    const int entryType = 2;//record data
     const int junctionType = 3;//record data
-    
-    const int cornerType = 4;//Event (Get into corner twice), Mood rating, record data
-    const int goalType = 5;//show the goal, Event (Get the goal), Mood rating, record data
-    const int boxType = 6;//show the box, Event (Get the box), Mood rating, record data
-    
+    const int cornerType = 4;//record data, Update boxes
+
+    const int goalType = 5;//show the goal, Event (Get the goal),  record data, Update boxes
+    const int boxType = 6;//show the box, Event (Get the box),  record data
+    const int droppingsType = 7;//show the effect, Event (good or bad),  record data
+
 
     void Reset()
     {
-        Awake();
+        //Awake();
 
     }
 
     void Awake()
     {
-        PlayerDynamic.debugInfo = "Generate Maze"; Debug.Log(PlayerDynamic.debugInfo);
+        Application.targetFrameRate = 30;
 
         GameObject world = Instantiate(Resources.Load("World", typeof(GameObject))) as GameObject;
         GameObject home = Instantiate(Resources.Load("Home", typeof(GameObject))) as GameObject;
@@ -53,16 +62,21 @@ public class GenerateMaze : MonoBehaviour
         maze = new GameObject("maze");
         wallWell = new GameObject("wallWell"); wallWell.transform.parent = maze.transform;
         junctionWell = new GameObject("junctionWell"); junctionWell.transform.parent = maze.transform;
-
         cornerWell = new GameObject("cornerWell"); cornerWell.transform.parent = maze.transform;
         goalWell = new GameObject("goalWell"); goalWell.transform.parent = maze.transform;
         boxWell = new GameObject("boxWell"); boxWell.transform.parent = maze.transform;
+        droppingsWell = new GameObject("droppingsWell"); droppingsWell.transform.parent = maze.transform;
 
         plantTrees();
 
         updateType = 0;
 
         StartCoroutine(InitializeMaze());
+    }
+
+    void Start()
+    {
+        PlayerDynamic.Instance.LogInfo = "Generate Maze"; Debug.Log(PlayerDynamic.Instance.LogInfo);
     }
     
     void plantTrees()
@@ -98,15 +112,14 @@ public class GenerateMaze : MonoBehaviour
         {
             if(updateType == 1)
             {
-                PlayerDynamic.debugInfo = "Update Boxes"; Debug.Log(PlayerDynamic.debugInfo);
+                PlayerDynamic.Instance.LogInfo = "Update Boxes & droppings"; Debug.Log(PlayerDynamic.Instance.LogInfo);
             }
             else if(updateType == 2)
             {
-                PlayerDynamic.debugInfo = "Update Goal and Boxes"; Debug.Log(PlayerDynamic.debugInfo);
+                PlayerDynamic.Instance.LogInfo = "Update Goal and Boxes & droppings"; Debug.Log(PlayerDynamic.Instance.LogInfo);
             }
 
             UpdateMaze(updateType);
-
             updateType = 0;
         }
     }
@@ -114,8 +127,10 @@ public class GenerateMaze : MonoBehaviour
     void UpdateMaze(int updateType)
     {
         Destroy(boxWell);
+        Destroy(droppingsWell);
         boxWell = new GameObject("boxWell"); boxWell.transform.parent = maze.transform;
-        RandomBox();
+        droppingsWell = new GameObject("droppingsWell"); droppingsWell.transform.parent = maze.transform;
+        RandomEvents();
 
         if(updateType == 2)
         {
@@ -139,6 +154,26 @@ public class GenerateMaze : MonoBehaviour
                         box.transform.position = new Vector3(init_point.x + x * unit_scale.x, 2, init_point.z + z * unit_scale.z);
                         box.transform.parent = box_trigger.transform;
                         box.SetActive(false);
+
+                        GameObject boxMarker = Instantiate(Resources.Load("MiniMapPrefab\\BoxMarker", typeof(GameObject))) as GameObject;
+                        boxMarker.transform.position = box.transform.position;
+                        boxMarker.transform.parent = box_trigger.transform;
+                        break;
+
+                    case droppingsType:
+                        GameObject droppings_trigger = Instantiate(Resources.Load("droppings_trigger", typeof(GameObject))) as GameObject;
+                        droppings_trigger.transform.localScale = unit_scale;
+                        droppings_trigger.transform.position = new Vector3(init_point.x + x * unit_scale.x, 0, init_point.z + z * unit_scale.z);
+                        droppings_trigger.transform.parent = droppingsWell.transform;
+
+                        GameObject droppings = Instantiate(Resources.Load("Droppings", typeof(GameObject))) as GameObject;
+                        droppings.transform.position = new Vector3(init_point.x + x * unit_scale.x, 2, init_point.z + z * unit_scale.z);
+                        droppings.transform.parent = droppings_trigger.transform;
+                        droppings.SetActive(false);
+
+                        GameObject droppingsMarker = Instantiate(Resources.Load("MiniMapPrefab\\DroppingsMarker", typeof(GameObject))) as GameObject;
+                        droppingsMarker.transform.position = droppings.transform.position;
+                        droppingsMarker.transform.parent = droppings_trigger.transform;
                         break;
 
                     case goalType:
@@ -167,6 +202,10 @@ public class GenerateMaze : MonoBehaviour
                             goal.transform.position = new Vector3(init_point.x + x * unit_scale.x, 2, init_point.z + z * unit_scale.z);
                             goal.transform.parent = goal_trigger.transform;
                             goal.SetActive(false);
+
+                            GameObject goalMarker = Instantiate(Resources.Load("MiniMapPrefab\\GoalMarker", typeof(GameObject))) as GameObject;
+                            goalMarker.transform.position = goal.transform.position;
+                            goalMarker.transform.parent = goal_trigger.transform;
                         }
                         break;
 
@@ -182,7 +221,7 @@ public class GenerateMaze : MonoBehaviour
         yield return new WaitForSeconds(0f);
 
         loadMazeConfig();
-        RandomBox();
+        RandomEvents();
 
         for (int x = 0; x < x_size; x++)
         {
@@ -229,8 +268,28 @@ public class GenerateMaze : MonoBehaviour
                         box.transform.position = new Vector3(init_point.x + x * unit_scale.x, 2, init_point.z + z * unit_scale.z);
                         box.transform.parent = box_trigger.transform;
                         box.SetActive(false);
+
+                        GameObject boxMarker = Instantiate(Resources.Load("MiniMapPrefab\\BoxMarker", typeof(GameObject))) as GameObject;
+                        boxMarker.transform.position = box.transform.position;
+                        boxMarker.transform.parent = box_trigger.transform;
                         break;
-                    
+
+                    case droppingsType:
+                        GameObject droppings_trigger = Instantiate(Resources.Load("droppings_trigger", typeof(GameObject))) as GameObject;
+                        droppings_trigger.transform.localScale = unit_scale;
+                        droppings_trigger.transform.position = new Vector3(init_point.x + x * unit_scale.x, 0, init_point.z + z * unit_scale.z);
+                        droppings_trigger.transform.parent = droppingsWell.transform;
+
+                        GameObject droppings = Instantiate(Resources.Load("Droppings", typeof(GameObject))) as GameObject;
+                        droppings.transform.position = new Vector3(init_point.x + x * unit_scale.x, 2, init_point.z + z * unit_scale.z);
+                        droppings.transform.parent = droppings_trigger.transform;
+                        droppings.SetActive(false);
+
+                        GameObject droppingsMarker = Instantiate(Resources.Load("MiniMapPrefab\\DroppingsMarker", typeof(GameObject))) as GameObject;
+                        droppingsMarker.transform.position = droppings.transform.position;
+                        droppingsMarker.transform.parent = droppings_trigger.transform;
+                        break;
+
                     case goalType:
                         GameObject goal_trigger = Instantiate(Resources.Load("goal_trigger", typeof(GameObject))) as GameObject;
                         goal_trigger.transform.localScale = unit_scale;
@@ -255,6 +314,10 @@ public class GenerateMaze : MonoBehaviour
                         goal.transform.position = new Vector3(init_point.x + x * unit_scale.x, 2, init_point.z + z * unit_scale.z);
                         goal.transform.parent = goal_trigger.transform;
                         goal.SetActive(false);
+
+                        GameObject goalMarker = Instantiate(Resources.Load("MiniMapPrefab\\GoalMarker", typeof(GameObject))) as GameObject;
+                        goalMarker.transform.position = goal.transform.position;
+                        goalMarker.transform.parent = goal_trigger.transform;
                         break;
 
                     default:
@@ -293,14 +356,28 @@ public class GenerateMaze : MonoBehaviour
                 predefMaze[x, z] = int.Parse(objs[z]);
             }
         }
+
+        string configFile = "Config.json";
+        using (System.IO.StreamReader file = System.IO.File.OpenText(configFile))
+        {
+            using (JsonTextReader reader = new JsonTextReader(file))
+            {
+                JObject config = (JObject)JToken.ReadFrom(reader);
+                minbox = int.Parse(config["min_box_num"].ToString()); Debug.Log("minbox: " + minbox.ToString());
+                maxbox = int.Parse(config["max_box_num"].ToString()); Debug.Log("maxbox: " + maxbox.ToString());
+                mindroppings = int.Parse(config["min_droppings_num"].ToString()); Debug.Log("mindroppings: " + mindroppings.ToString());
+                maxdroppings = int.Parse(config["max_droppings_num"].ToString()); Debug.Log("maxdroppings: " + maxdroppings.ToString());
+            }
+        }
     }
 
-    void RandomBox()
+    void RandomEvents()
     {
         mazeMatrix = new int[x_size, z_size];
         Array.Copy(predefMaze, mazeMatrix, x_size * z_size);
 
-        PlayerDynamic.boxNum = UnityEngine.Random.Range(5, 40);
+        PlayerDynamic.Instance.boxNum = UnityEngine.Random.Range(minbox, maxbox);
+        PlayerDynamic.Instance.droppingsNum = UnityEngine.Random.Range(mindroppings, maxdroppings);
 
         List<int> Poslist = new List<int>();
         for (int x = 0; x < x_size; x++)
@@ -316,9 +393,14 @@ public class GenerateMaze : MonoBehaviour
         int[] Posarray = Poslist.ToArray();
         Shuffle(Posarray);
         
-        for (int i = 0; i < PlayerDynamic.boxNum; i++)
+        for (int i = 0; i < PlayerDynamic.Instance.boxNum; i++)
         {
             mazeMatrix[Posarray[i] / z_size, Posarray[i] % z_size] = boxType;
+        }
+
+        for (int i = PlayerDynamic.Instance.boxNum; i < (PlayerDynamic.Instance.boxNum + PlayerDynamic.Instance.droppingsNum); i++)
+        {
+            mazeMatrix[Posarray[i] / z_size, Posarray[i] % z_size] = droppingsType;
         }
 
         StreamWriter sw = new StreamWriter("movementFile" + SubjectMenu.subjectNumber + ".txt", true);

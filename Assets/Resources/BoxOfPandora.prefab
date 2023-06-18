@@ -11105,7 +11105,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3, y: 20, z: 3}
+  m_Size: {x: 2, y: 20, z: 2}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!23 &-8560565514297351828
 MeshRenderer:
@@ -11168,7 +11168,6 @@ MonoBehaviour:
   negativeSound: {fileID: 8300000, guid: d66b362c266436340944321c6714c8ea, type: 3}
   negativeEffects:
   - {fileID: 180702, guid: a7c694f0877ea874fa57e033221095c3, type: 3}
-  isChecked: 0
 --- !u!1 &527282336774386236
 GameObject:
   m_ObjectHideFlags: 0

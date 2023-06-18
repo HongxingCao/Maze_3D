@@ -17,7 +17,7 @@ public class GroundCheck : MonoBehaviour
     Vector3 RaycastOrigin => transform.position + Vector3.up * OriginOffset;
     float RaycastDistance => distanceThreshold + OriginOffset;
 
-
+    private float cd = 0f;
     void LateUpdate()
     {
         // Check if we are grounded now.
@@ -26,7 +26,12 @@ public class GroundCheck : MonoBehaviour
         // Call event if we were in the air and we are now touching the ground.
         if (isGroundedNow && !isGrounded)
         {
-            Grounded?.Invoke();
+            cd += Time.deltaTime;
+            if (cd > 5f)
+            {
+                cd = 0f;
+                Grounded?.Invoke();
+            }
         }
 
         // Update isGrounded.

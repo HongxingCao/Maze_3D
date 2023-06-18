@@ -187,10 +187,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "If you want to improve your grades, \nyou will have to start over again!"
+  m_text: "\u91CD\u65B0\u8FDB\u5165\u6E38\u620F\uFF0C\u6210\u7EE9\u5C06\u4ECE0\u5F00\u59CB\u91CD\u65B0\u8BA1\u5206\uFF01"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
+  m_sharedMaterial: {fileID: 376554193332959201, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -322,10 +322,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Submit
+  m_text: "\u786E\u5B9A"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
+  m_sharedMaterial: {fileID: 376554193332959201, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -694,10 +694,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Do you really want to quit the game?
+  m_text: "\u60A8\u786E\u5B9A\u8981\u9000\u51FA\u6E38\u620F\u5417\uFF1F"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
+  m_sharedMaterial: {fileID: 376554193332959201, guid: 0bcc8271cf250ea47b64059bd73ef8f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

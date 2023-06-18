@@ -545,7 +545,7 @@ GameObject:
   - component: {fileID: 1779599529564720236}
   - component: {fileID: 1779599529564720237}
   m_Layer: 0
-  m_Name: arrow animation 12
+  m_Name: RefArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -796,6 +796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDebug: 0
   miniMap: {fileID: 0}
+  ratingLag: 180
 --- !u!114 &1779599529796603332
 MonoBehaviour:
   m_ObjectHideFlags: 0

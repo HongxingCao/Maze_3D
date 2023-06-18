@@ -426,14 +426,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1779599529361097206, guid: 0cb5592cf9500ce419661cbd8075c3d8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1779599529638741531, guid: 0cb5592cf9500ce419661cbd8075c3d8, type: 3}
+      propertyPath: m_OcclusionCulling
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1779599529796603333, guid: 0cb5592cf9500ce419661cbd8075c3d8, type: 3}
       propertyPath: isDebug
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1779599529796603333, guid: 0cb5592cf9500ce419661cbd8075c3d8, type: 3}
       propertyPath: miniMap
       value: 
       objectReference: {fileID: 76664437}
+    - target: {fileID: 1779599529796603333, guid: 0cb5592cf9500ce419661cbd8075c3d8, type: 3}
+      propertyPath: ratingLag
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 1779599529796603335, guid: 0cb5592cf9500ce419661cbd8075c3d8, type: 3}
       propertyPath: m_RootOrder
       value: 2

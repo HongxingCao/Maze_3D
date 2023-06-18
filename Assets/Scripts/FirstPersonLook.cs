@@ -18,26 +18,22 @@ public class FirstPersonLook : MonoBehaviour
     private InputControls inputControls;
     void Awake()
     {
-
         inputControls = new InputControls();
         inputControls.Player.Enable();
-    }
-
-    void Reset()
-    {
-        // Get the character from the FirstPersonMovement in parents.
-        character = GetComponentInParent<FirstPersonMovement>().transform;
     }
 
     void Start()
     {
         // Lock the mouse cursor to the game screen.
         //Cursor.lockState = CursorLockMode.Locked;
+
+        // Get the character from the FirstPersonMovement in parents.
+        character = GetComponentInParent<FirstPersonMovement>().transform;
     }
 
     void Update()
     {
-        if (FirstPersonMovement.HaltUpdateMovement)
+        if (PlayerDynamic.Instance.Halt)
             return;
 
         //IsRunning = canRun && Input.GetKey(KeyCode.LeftAlt);
